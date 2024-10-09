@@ -7,12 +7,12 @@
 local slayerTaskFrame = CreateFrame("Frame", "WORSSlayerTaskFrame", UIParent)
 slayerTaskFrame:SetSize(300, 140)  -- Adjust size for more text
 slayerTaskFrame:SetPoint("TOPRIGHT", -200, -150)  -- Start in the top-right corner, slightly centered
---slayerTaskFrame:SetBackdrop({
-    --bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
-    --edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
-   -- tile = true, tileSize = 32, edgeSize = 32,
-    --insets = {left = 11, right = 12, top = 12, bottom = 11}
---})
+slayerTaskFrame:SetBackdrop({
+    bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
+    edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+    tile = true, tileSize = 32, edgeSize = 32,
+    insets = {left = 11, right = 12, top = 12, bottom = 11}
+})
 slayerTaskFrame:SetMovable(true)
 slayerTaskFrame:EnableMouse(true)
 slayerTaskFrame:RegisterForDrag("LeftButton")
@@ -21,14 +21,12 @@ slayerTaskFrame:SetScript("OnDragStop", slayerTaskFrame.StopMovingOrSizing)
 slayerTaskFrame:Hide()
 
 local titleText = slayerTaskFrame:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-titleText:SetPoint("TOPLEFT", 15, -15)
-titleText:SetText("")
+titleText:SetPoint("TOP", 0, -15)
+titleText:SetText("WORS Slayer Helper")
 
 -- Create a larger font for the task text without changing its color
 local taskText = slayerTaskFrame:CreateFontString(nil, "ARTWORK", "GameFontHighlight")  -- Keep the original color
-taskText:SetTextColor(1, 1, 1)	-- Set text color to white (R, G, B)
-taskText:SetFontObject(GameFontNormal)
-taskText:SetFont(GameFontNormal:GetFont(), 20, "OUTLINE")  -- Set to default font with size 16
+taskText:SetFont("Fonts\\FRIZQT__.TTF", 16, "OUTLINE")  -- Set a larger font size
 taskText:SetPoint("TOPLEFT", 15, -40)  -- Padding from the left
 taskText:SetPoint("TOPRIGHT", -15, -40)  -- Padding from the right
 taskText:SetWidth(270)  -- Adjust width for cleaner layout
@@ -83,7 +81,7 @@ local function CheckSlayerTask()
             end
         end
     end
-    --print("No Slayer Task Found")  -- Debugging
+    print("No Slayer Task Found")  -- Debugging
     return nil, nil, nil, nil
 end
 
@@ -108,20 +106,16 @@ local function DisplaySlayerTask()
         -- Fetch and display quest objectives and locations
         if questIndex then
             local objectiveCount = GetNumQuestLeaderBoards(questIndex)
-			for j = 1, objectiveCount do
-				local objectiveText, objectiveType, objectiveCompleted, objectiveRequired = GetQuestLogLeaderBoard(j, questIndex)
-
-				-- Remove "Kill " from the start of the objectiveText
-				objectiveText = string.gsub(objectiveText, "^Kill ", "")
-
-				local currentProgress = objectiveCompleted and objectiveRequired or 0
-				taskText:SetText(taskText:GetText() .. objectiveText)
-			end
+            for j = 1, objectiveCount do
+                local objectiveText, objectiveType, objectiveCompleted, objectiveRequired = GetQuestLogLeaderBoard(j, questIndex)
+                local currentProgress = objectiveCompleted and objectiveRequired or 0
+                taskText:SetText(taskText:GetText() .. objectiveText)
+            end
 
             -- Display location data for the task
             local locations = WORSSlayerTaskData[taskName]
             if locations then
-                taskText:SetText(taskText:GetText() .. "\n  - " .. table.concat(locations, "\n  - "))
+                taskText:SetText(taskText:GetText() .. "\n    " .. table.concat(locations, "\n    "))
             end
         else
             taskText:SetText(taskText:GetText() .. "\nNo objectives found!")

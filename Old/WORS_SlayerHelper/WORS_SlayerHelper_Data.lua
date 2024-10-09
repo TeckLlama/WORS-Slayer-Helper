@@ -44,9 +44,6 @@ WORSSlayerTaskData = {
 		"Three test",
 	},
 	["Ghosts"] = {
-		"test",
-		"test",
-		"test",
 	},
 	["Goblins"] = {
 		"Lumbridge Goblin Camp",
